@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HousingService } from './services/housing.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatToolbarModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    HousingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
