@@ -1,36 +1,47 @@
 [
   {
   "Id":1,
+  "SellRent": 1,
   "Name":"Zelzah Court",
   "Type":"House",
-  "Price": 12000
+  "Price": 12000,
+  "Image": "property-1"
   },
   {
     "Id":2,
+    "SellRent": 2,
     "Name":"Maravilla",
     "Type":"House",
-    "Price": 19000
+    "Price": 19000,
+    "Image": "property-2"
   },
   {
     "Id":3,
+    "SellRent": 1,
     "Name":"Candlewood",
     "Type":"House",
-    "Price": 71000
+    "Price": 71000,
+    "Image": "property-3"
   },
   {
     "Id":4,
+    "SellRent": 1,
     "Name":"Meridian Pointee",
     "Type":"House",
-    "Price": 21000
+    "Price": 21000,
+    "Image": "property-4"
   },
   {
     "Id":5,
+    "SellRent": 1,
     "Name":"Meridian Place",
     "Type":"House",
-    "Price": 10000
+    "Price": 10000,
+    "Image": "property-5"
   },
   {
     "Id":6,
+    "SellRent": 1,
     "Name":"Parc ridge",
     "Type":"House",
     "Price": 18000
