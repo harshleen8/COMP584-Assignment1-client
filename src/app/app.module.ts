@@ -10,22 +10,17 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HousingService } from './services/housing.service';
 import { AddPropertyComponent } from './property/add-property/add-property.component';
 import { PropertyDetailComponent } from './property/property-detail/property-detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserLoginComponent } from './user/user-login/user-login.component';
-
-const appRoutes: Routes = [
-  {path: '', component: PropertyListComponent},
-  {path: 'rent-property', component: PropertyListComponent},
-  {path: 'add-property', component: AddPropertyComponent},
-  {path: 'property-detail/:id', component: PropertyDetailComponent},
-  {path: 'user/login', component: UserLoginComponent},
-  {path: '**', component: PropertyListComponent}
-]
+import { UserLoginComponent } from './auth/user-login.component';
+import { AuthService } from './auth/auth.service';
+import { AlertifyService } from './services/alertify.service';
+import { MatInputModule } from "@angular/material/input";
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -45,12 +40,19 @@ const appRoutes: Routes = [
     MatIconModule,
     MatToolbarModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatInputModule
   ],
   providers: [
-    HousingService
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    HousingService,
+    AuthService,
+    AlertifyService
   ],
   bootstrap: [AppComponent]
 })
