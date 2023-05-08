@@ -16,7 +16,7 @@ export class UserLoginComponent implements OnInit {
   form!: UntypedFormGroup;
   loginResult!: LoginResult;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -38,12 +38,14 @@ export class UserLoginComponent implements OnInit {
         if (result.success) {
           localStorage.setItem(this.authService.tokenKey, result.token);
           this.router.navigate(["/"]);
+          this.alertify.success('You are successfully logged in');
         }
       },
       error: error => {
         console.log(error);
         if (error.status == 401) {
           loginRequest = error.error;
+          this.alertify.error('Invalid username or password');
         }
     }});
   }

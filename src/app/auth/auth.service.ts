@@ -37,7 +37,7 @@ tokenKey: string = 'jwt-token';
   }
 
   login(item: LoginRequest): Observable<LoginResult> {
-      var url = environment.baseUrl + '/api/Account/login';
+      var url = environment.baseUrl + '/api/Account';
       return this.http.post<LoginResult>(url, item)
       .pipe(tap((loginResult: LoginResult) => {
         if (loginResult.success && loginResult.token) {
