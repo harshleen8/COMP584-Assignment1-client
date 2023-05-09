@@ -21,6 +21,9 @@ import { AuthService } from './auth/auth.service';
 import { AlertifyService } from './services/alertify.service';
 import { MatInputModule } from "@angular/material/input";
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    TabsModule.forRoot(),
+    ButtonsModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   providers: [
     {
