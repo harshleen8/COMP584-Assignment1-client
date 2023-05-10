@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { IProperty } from '../property/property-list/IProperty.interface';
 import { Observable } from 'rxjs/internal/Observable';
+import { IProperty } from '../model/iproperty';
+import { Property } from '../model/property';
+import { environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HousingService {
+
+  baseUrl = environment.baseUrl;
 
   constructor(private http:HttpClient) { }
 
@@ -24,4 +28,13 @@ export class HousingService {
       })
     );
   }
+  addProperty(property: Property) {
+    const httpOptions = {
+        headers: new HttpHeaders({
+            Authorization: 'Bearer '+ localStorage.getItem('token')
+        })
+    };
+    return this.http.post(this.baseUrl + '/property/add', property, httpOptions);
+}
+
 }
