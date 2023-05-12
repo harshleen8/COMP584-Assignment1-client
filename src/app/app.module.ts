@@ -24,6 +24,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PropertyDetailResolverService } from './property/property-detail/property-detail-resolver.service';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     },
     HousingService,
     AuthService,
+    PropertyDetailResolverService,
     AlertifyService
   ],
   bootstrap: [AppComponent]
