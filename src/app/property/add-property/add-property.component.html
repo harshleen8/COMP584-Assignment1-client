@@ -91,14 +91,19 @@
 
                 <div class="form-group col-12">
                   <label>City</label>
-                  <input type="text"
+                  <select #City
+                  (change)="propertyView.City=City.options[City.options.selectedIndex].text"
                   class="form-control"
-                  formControlName="City"
-                  [(ngModel)]="propertyView.City">
-                  <div class="error-block"
-                  *ngIf="City.invalid && (nextClicked || City.touched)">
+                  formControlName="City">
+                    <option value=''>--Select City--</option>
+                    <option *ngFor="let city of cityList" value={{city.id}}>
+                      {{city.name}}
+                    </option>
+                  </select>
+                  <!-- <div class="error-block"
+                  *ngIf="City.invalid && (nextClicked)">
                     Please select city
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="form-group col-12">
@@ -286,24 +291,10 @@
                 </div>
 
                 <div class="form-group col-12">
-                    <button type="button" class="btn btn-primary btn-block"
-                    (click)="selectTab(4, OtherInfo.valid)">Next</button>
-
-                    <button type="button" class="btn btn-primary btn-block"
-                    (click)="selectTab(2, OtherInfo.valid)">Back</button>
-                </div>
-              </tab>
-
-              <tab heading="Photos">
-                <div class="form-group col-12">
-                  <div class="photo-control">
-                      <button class="mt-5" type="button">Upload</button> <br>
-                      This is under construction
-                  </div>
                 </div>
                 <div class="form-group col-12">
                   <button type="button" class="btn btn-primary btn-block"
-                  (click)="selectTab(3, true)">Back</button>
+                  (click)="selectTab(2, true)">Back</button>
                   <button type="submit" class="btn btn-primary btn-block">Save</button>
                   <button type="reset" class="btn btn-primary btn-block">Cancel</button>
                 </div>

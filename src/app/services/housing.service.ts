@@ -15,6 +15,10 @@ export class HousingService {
 
   constructor(private http: HttpClient) { }
 
+  getAllCities(): Observable<string[]> {
+    return this.http.get<string[]>(this.baseUrl + '/api/City');
+}
+
   getProperty(id: number): Observable<Property | undefined>  {
     return this.getAllProperties().pipe(
       map(propertiesArray => {

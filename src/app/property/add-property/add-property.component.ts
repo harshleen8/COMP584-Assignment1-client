@@ -1,12 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import {FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { TabsetComponent } from 'ngx-bootstrap/tabs/public_api';
 import { IPropertyBase } from 'src/app/model/ipropertybase';
 import { Property } from 'src/app/model/property';
 import { HousingService } from 'src/app/services/housing.service';
 import { AlertifyService } from 'src/app/services/alertify.service';
+import { map } from 'rxjs';
 
+class AuthGuard implements CanActivate {
+  constructor(private router: Router) {}
+
+  canActivate() {
+    if (!localStorage.getItem('userName')) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
+  }
+}
 
 @Component({
   selector: 'app-add-property',
@@ -23,6 +35,7 @@ export class AddPropertyComponent implements OnInit {
   // Will come from masters
   propertyTypes: Array<string> = ['House', 'Apartment', 'Duplex']
   furnishTypes: Array<string> = ['Fully', 'Semi', 'Unfurnished']
+  cityList!: any[];
 
   propertyView: IPropertyBase = {
     Id: 0,
@@ -39,12 +52,17 @@ export class AddPropertyComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
+    public router: Router,
     private housingService: HousingService,
     private alertify: AlertifyService) { }
 
   ngOnInit() {
-    this.CreateAddPropertyForm();
+
+        this.CreateAddPropertyForm();
+        this.housingService.getAllCities().subscribe(data => {
+          this.cityList = data;
+          console.log(data);
+      });
   }
 
   CreateAddPropertyForm() {
@@ -195,25 +213,28 @@ export class AddPropertyComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.nextClicked = true;
     if (this.allTabsValid()) {
       this.mapProperty();
-      this.housingService.addProperty(this.property);
-      this.alertify.success('Congrats, your property listed successfully on our website');
-      console.log(this.addPropertyForm);
 
-      if(this.SellRent.value === '2') {
-        this.router.navigate(['/rent-property']);
-      } else {
-        this.router.navigate(['/']);
+      try {
+        await this.housingService.addProperty(this.property);
+        this.alertify.success('Congrats, your property listed successfully on our website');
+
+        if (this.SellRent.value === '2') {
+          this.router.navigate(['/rent-property']);
+        } else {
+          this.router.navigate(['/']);
+        }
+      } catch (error) {
+        this.alertify.error('An error occurred while adding the property. Please try again later.');
       }
-
-
     } else {
       this.alertify.error('Please review the form and provide all valid entries');
     }
   }
+
 
   mapProperty(): void {
     this.property.Id = this.housingService.newPropID();
