@@ -28,6 +28,7 @@ import { PropertyDetailResolverService } from './property/property-detail/proper
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FilterPipe } from './Pipes/filter.pipe';
 import { SortPipe } from './Pipes/sort.pipe';
+import { UserSignupComponent } from './auth/user-signup/user-signup.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { SortPipe } from './Pipes/sort.pipe';
     AddPropertyComponent,
     PropertyDetailComponent,
     UserLoginComponent,
+    UserSignupComponent,
     FilterPipe,
     SortPipe
   ],

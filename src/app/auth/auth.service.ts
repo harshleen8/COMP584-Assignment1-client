@@ -4,6 +4,7 @@ import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../environment/environment';
 import { LoginRequest } from './login-request';
 import { LoginResult } from './login-result';
+import { UserSignUp } from './user-signup/user-signup';
 
 
 @Injectable({
@@ -50,6 +51,10 @@ tokenKey: string = 'jwt-token';
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.setAuthStatus(false);
+  }
+  signup(user: UserSignUp){
+    var url = environment.baseUrl;
+    return this.http.post(url + '/account/register', user);
   }
 
 }

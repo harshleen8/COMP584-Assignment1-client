@@ -5,6 +5,7 @@ import { AddPropertyComponent } from './property/add-property/add-property.compo
 import { PropertyDetailComponent } from './property/property-detail/property-detail.component';
 import { PropertyListComponent } from './property/property-list/property-list.component';
 import { PropertyDetailResolverService } from './property/property-detail/property-detail-resolver.service';
+import { UserSignupComponent } from './auth/user-signup/user-signup.component';
 
 const appRoutes: Routes = [
   {path: '', component: PropertyListComponent},
@@ -14,6 +15,7 @@ const appRoutes: Routes = [
         component: PropertyDetailComponent,
         resolve: { prp: PropertyDetailResolverService }},
   {path: 'login', component: UserLoginComponent},
+  {path: 'signup', component: UserSignupComponent},
   {path: '**', component: PropertyListComponent}
 ]
 

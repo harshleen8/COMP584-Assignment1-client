@@ -18,6 +18,7 @@
 
       </ul>
       <div>
+        <a mat-flat-button *ngIf="!isLoggedIn" color="primary" [routerLink]="['/signup']">SignUp</a>
          <span class="separator"></span>
       <a mat-flat-button *ngIf="!isLoggedIn" color="primary" [routerLink]="['/login']">Login</a>
       <a mat-flat-button *ngIf="isLoggedIn" color="primary" (click)="onLogout()">Logout</a>
