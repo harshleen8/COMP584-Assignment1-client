@@ -56,5 +56,12 @@ tokenKey: string = 'jwt-token';
     var url = environment.baseUrl;
     return this.http.post(url + '/api/Account/register', user);
   }
-
+  changePassword(changePasswordRequest: any): Observable<any> {
+    var url = environment.baseUrl;
+    return this.http.post<any>(url + '/api/Account/change-password', changePasswordRequest);
+  }
+  resetPassword(resetPasswordRequest: any): Observable<any> {
+    var url = environment.baseUrl;
+    return this.http.post<any>(url + '/api/Account/reset-password', resetPasswordRequest);
+  }
 }
