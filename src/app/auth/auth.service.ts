@@ -54,7 +54,7 @@ tokenKey: string = 'jwt-token';
   }
   signup(user: UserSignUp){
     var url = environment.baseUrl;
-    return this.http.post(url + '/account/register', user);
+    return this.http.post(url + '/api/Account/register', user);
   }
 
 }

@@ -2,20 +2,61 @@
   <h1>Login</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
+    <!-- Existing login form fields -->
+    <mat-form-field>
+      <mat-label>Name:</mat-label>
+      <input matInput formControlName="userName" required placeholder="Enter user name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password:</mat-label>
+      <input matInput type="password" formControlName="password" required placeholder="Enter password">
+    </mat-form-field>
+
+    <div>
+      <button mat-flat-button color="primary" type="submit">Login</button>
+      <button mat-flat-button color="secondary" [routerLink]="['/']">Cancel</button>
+    </div>
+
+    <!-- Change password functionality -->
+    <div *ngIf="showChangePassword">
+      <h3>Change Password</h3>
       <mat-form-field>
-          <mat-label>Name:</mat-label>
-          <input matInput formControlName="userName" required="required" placeholder="Enter user name">
+        <mat-label>Current Password:</mat-label>
+        <input matInput type="password" formControlName="currentPassword" required placeholder="Enter current password">
       </mat-form-field>
 
       <mat-form-field>
-          <mat-label>Password:</mat-label>
-          <input matInput type="password" formControlName="password" required="required" placeholder="Enter password">
+        <mat-label>New Password:</mat-label>
+        <input matInput type="password" formControlName="newPassword" required placeholder="Enter new password">
       </mat-form-field>
 
-      <div>
-          <button mat-flat-button color="primary" type="submit">Login</button>
-          <button mat-flat-button color="secondary" [routerLink]="['/']">Cancel</button>
-      </div>
+      <mat-form-field>
+        <mat-label>Confirm New Password:</mat-label>
+        <input matInput type="password" formControlName="confirmNewPassword" required placeholder="Confirm new password">
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="onChangePassword()">Change Password</button>
+    </div>
+
+    <!-- Reset password functionality -->
+    <div *ngIf="showResetPassword">
+      <h3>Reset Password</h3>
+      <mat-form-field>
+        <mat-label>Email:</mat-label>
+        <input matInput type="email" formControlName="resetPasswordEmail" required placeholder="Enter your email">
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="onResetPassword()">Reset Password</button>
+    </div>
+
+    <!-- Additional UI elements based on the state or requirements -->
+    <div *ngIf="showForgotPasswordLink">
+      <a href="#" (click)="onShowResetPassword()">Forgot Password?</a>
+    </div>
+    <div *ngIf="showChangePasswordLink">
+      <a href="#" (click)="onShowChangePassword()">Change Password</a>
+    </div>
+
   </form>
 </div>
-

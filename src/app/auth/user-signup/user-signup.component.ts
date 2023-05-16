@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { AuthService } from '../auth.service';
 import { UserSignUp } from './user-signup';
@@ -15,6 +16,7 @@ export class UserSignupComponent implements OnInit {
     user!: UserSignUp;
     userSubmitted!: boolean;
     constructor(private fb: FormBuilder,
+                private router: Router,
                 private authService: AuthService,
                 private alertify: AlertifyService ) { }
 
@@ -23,19 +25,33 @@ export class UserSignupComponent implements OnInit {
     }
 
     createRegisterationForm() {
-        this.signUpForm =  this.fb.group({
-            userName: [null, Validators.required],
-            email: [null, [Validators.required, Validators.email]],
-            password: [null, [Validators.required, Validators.minLength(8)]],
-            confirmPassword: [null, Validators.required],
-            mobile: [null, [Validators.required, Validators.maxLength(10)]]
-        });
+      this.signUpForm = this.fb.group({
+        userName: [null, Validators.required],
+        email: [null, [Validators.required, Validators.email]],
+        password: [null, [Validators.required, Validators.minLength(8)]],
+        confirmPassword: [null, Validators.required],
+        mobile: [null, [Validators.required, Validators.maxLength(10)]]
+      });
+
+      const passwordControl = this.signUpForm.get('password');
+      const confirmPasswordControl = this.signUpForm.get('confirmPassword');
+
+      if (passwordControl && confirmPasswordControl) {
+        confirmPasswordControl.setValidators(this.passwordMatchingValidatior(passwordControl));
+        confirmPasswordControl.updateValueAndValidity();
+      }
     }
 
-    // passwordMatchingValidatior(fg: FormGroup): Validators {
-    //     return fg.get('password').value === fg.get('confirmPassword').value ? null :
-    //         {notmatched: true};
-    // }
+    passwordMatchingValidatior(passwordControl: AbstractControl): ValidatorFn {
+      return (confirmPasswordControl: AbstractControl): ValidationErrors | null => {
+        if (passwordControl.value !== confirmPasswordControl.value) {
+          return { notmatched: true };
+        }
+        return null;
+      };
+    }
+
+
 
 
     onSubmit() {
@@ -47,12 +63,14 @@ export class UserSignupComponent implements OnInit {
             this.authService.signup(this.userData()).subscribe(() =>
             {
                 this.onReset();
+                this.router.navigate(["/"]);
                 this.alertify.success('Congrats, you are successfully registered');
             });
         }
     }
 
     onReset() {
+      console.log(Error);
         this.userSubmitted = false;
         this.signUpForm.reset();
     }
