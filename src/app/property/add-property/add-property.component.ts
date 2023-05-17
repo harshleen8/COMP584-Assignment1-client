@@ -200,18 +200,19 @@ onFileChange(event: any) {
     if (this.allTabsValid()) {
       this.mapProperty();
 
-      this.housingService.addProperty(this.property1).subscribe(
-        () => {
-            this.alertify.success('Congrats, your property listed successfully on our website');
-            console.log(this.addPropertyForm);
+      try {
+        this.housingService.addProperty(this.property1);
+        this.alertify.success('Congrats, your property listed successfully on our website');
 
-            if (this.SellRent.value === '2') {
-                this.router.navigate(['/rent-property']);
-            } else {
-                this.router.navigate(['/']);
-            }
+        if (this.SellRent.value === '2') {
+          this.router.navigate(['/rent-property']);
+        } else {
+
+          this.router.navigate(['/']);
         }
-    );
+      } catch (error) {
+        this.alertify.error('An error occurred while adding the property. Please try again later.');
+      }
     } else {
       this.alertify.error('Please review the form and provide all valid entries');
     }
