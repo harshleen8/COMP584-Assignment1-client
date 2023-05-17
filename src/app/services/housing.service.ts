@@ -64,13 +64,9 @@ export class HousingService {
     );
   }
 
-  addProperty(property: Property) {
-    const httpOptions = {
-        headers: new HttpHeaders({
-            Authorization: 'Bearer '+ localStorage.getItem('token')
-        })
-    };
-    return this.http.post(this.baseUrl + '/api/property/add', property, httpOptions);
+  addProperty(property: Property): Observable<any> {
+
+    return this.http.post(this.baseUrl + '/api/property/add', property);
 }
 
   newPropID() {

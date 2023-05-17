@@ -111,21 +111,6 @@ export class AddPropertyComponent implements OnInit {
       }),
       });
   }
-  saveData() {
-    let property = new Property();
-
-    property.Name = this.form.controls['name'].value;
-    // set other properties of the property object
-
-    // perform further actions with the property object
-
-    this.housingService.addProperty(property).subscribe(
-      () => {
-        this.alertify.success('Congrats, your property has been saved successfully');
-        // Handle any additional actions after saving the property
-      }
-    );
-  }
 
 
 
@@ -201,7 +186,15 @@ onFileChange(event: any) {
       this.mapProperty();
 
       try {
-        this.housingService.addProperty(this.property1);
+        this.housingService.addProperty(this.property1).subscribe({
+          next: (data)=> {
+            console.log(data);
+          },
+          error: (error)=> {
+            console.log(error);
+          }
+        });
+
         this.alertify.success('Congrats, your property listed successfully on our website');
 
         if (this.SellRent.value === '2') {
