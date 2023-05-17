@@ -66,7 +66,7 @@ export class AddPropertyComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup(
       {
-        name: new FormControl(''),
+        Name: new FormControl(''),
         SellRent: new FormControl(''),
         PType: new FormControl(''),
         FType: new FormControl(''),
@@ -99,7 +99,8 @@ export class AddPropertyComponent implements OnInit {
         BHK: [null, Validators.required],
         PType: [null, Validators.required],
         FType: [null, Validators.required],
-        City: [null, Validators.required]
+        City: [null, Validators.required],
+        Name: [null, Validators.required]
       }),
 
       PriceInfo: this.fb.group({
@@ -241,6 +242,10 @@ onFileChange(event: any) {
     }
 
     if (this.AddressInfo.invalid) {
+      this.formTabs.tabs[2].active = true;
+      return false;
+    }
+    if (this.Name.invalid) {
       this.formTabs.tabs[2].active = true;
       return false;
     }

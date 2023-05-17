@@ -23,6 +23,13 @@
                     Please select sell or buy
                   </div>
                 </div>
+                <div class="form-group col-12">
+                  <label>Property Name</label>
+                  <input type="text" class="form-control" formControlName="Name">
+                  <div class="error-block" *ngIf="Name.invalid && nextClicked">
+                    Please enter a property name
+                  </div>
+                </div>
 
                 <div class="form-group col-12">
                   <p>BHK</p>
@@ -30,7 +37,7 @@
                   formControlName="BHK"
                   [(ngModel)]="propertyView.BHK" name="BHK">
                     <label
-                      *ngFor="let bhk of [1,2,'Studio']"
+                      *ngFor="let bhk of [1,2,3]"
                       class="btn btn-outline-primary mr-2"
                       [btnRadio]="bhk" tabindex="0" role="button"
                       name="BHK">
