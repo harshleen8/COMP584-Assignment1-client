@@ -3,8 +3,8 @@ export interface Properties {
   Name: string;
   sellRent: number;
   bhk: number;
-  propertyTypeId: string;
-  furnishingTypeId: string;
+  PType: string;
+  FType: string;
   price: Int16Array;
   address: string;
 }

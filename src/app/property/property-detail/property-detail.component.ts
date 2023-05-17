@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Property } from 'src/app/model/property';
 import { HousingService } from 'src/app/services/housing.service';
-import {NgxGalleryOptions} from '@kolkov/ngx-gallery';
-import {NgxGalleryImage} from '@kolkov/ngx-gallery';
-import {NgxGalleryAnimation} from '@kolkov/ngx-gallery';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from '@kolkov/ngx-gallery';
 
 @Component({
   selector: 'app-property-detail',
@@ -12,27 +10,28 @@ import {NgxGalleryAnimation} from '@kolkov/ngx-gallery';
   styleUrls: ['./property-detail.component.css']
 })
 export class PropertyDetailComponent implements OnInit {
-changePrimaryPhoto($event: Event) {
-throw new Error('Method not implemented.');
-}
+  public propertyId!: number;
+  property = new Property();
+  mainPhotoUrl: any;
+  galleryOptions!: NgxGalleryOptions[];
+  galleryImages!: NgxGalleryImage[];
 
-public propertyId!: number;
-property = new Property();
-mainPhotoUrl: any;
-galleryOptions: any;
-galleryImages: any;
-
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private router: Router,
-    private housingService: HousingService) { }
+    private housingService: HousingService
+  ) {}
 
   ngOnInit(): void {
-    this.propertyId = +this.route.snapshot.params['id'];
-    this.route.data.subscribe(
-      (data: any) => {
-        this.property = data['prp'];
-      }
-    );
+    this.route.params.subscribe((params) => {
+      this.propertyId = +params['id'];
+      this.housingService.getProperty(this.propertyId).subscribe(
+        (data: any) => {
+          this.property = data;
+        },
+        (error) => this.router.navigate(['/'])
+      );
+    });
 
     this.galleryOptions = [
       {
@@ -71,19 +70,5 @@ galleryImages: any;
         big: 'assets/images/internal-5.jpg'
       }
     ];
-
-
-    // this.route.params.subscribe(
-    //   (params) => {
-    //     this.propertyId = +params['id'];
-    //     this.housingService.getProperty(this.propertyId).subscribe(
-    //       (data: any)  => {
-    //         this.property = data;
-    //       }, error => this.router.navigate(['/'])
-    //     );
-    //   }
-    // );
-
   }
-
 }

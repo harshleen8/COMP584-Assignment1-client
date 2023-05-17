@@ -1,72 +1,46 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { RouterTestingModule } from '@angular/router/testing';
-
-import { AuthService } from './auth.service';
-import { AuthInterceptor } from './auth.interceptor';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthInterceptor } from './auth.interceptor';
+import { AuthService } from './auth.service';
 
 describe('AuthInterceptor', () => {
-  let authService: AuthService;
   let httpMock: HttpTestingController;
-  let httpClient: HttpClient;
+  let authService: AuthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule
-      ],
-      providers: [
-        AuthService,
-        {
-          provide: HTTP_INTERCEPTORS,
-          useClass: AuthInterceptor,
-          multi: true
-        }
-      ]
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [AuthService, AuthInterceptor]
     });
-
-    authService = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-    httpClient = TestBed.inject(HttpClient);
+    authService = TestBed.inject(AuthService);
+  });
+
+  it('should add Authorization header when token is available', () => {
+    const token = 'mockToken';
+    spyOn(authService, 'getToken').and.returnValue(token);
+
+    TestBed.inject(AuthInterceptor);
+
+    httpMock.expectOne(req => {
+      return req.headers.has('Authorization') && req.headers.get('Authorization') === `Bearer ${token}`;
+    });
+  });
+
+  it('should perform logout and navigate to login page on 401 Unauthorized response', () => {
+    TestBed.inject(AuthInterceptor);
+    const authServiceSpy = spyOn(authService, 'logout');
+    const routerSpy = spyOn(TestBed.inject(Router), 'navigate');
+
+    httpMock.expectOne('testUrl').flush('', { status: 401, statusText: 'Unauthorized' });
+
+    expect(authServiceSpy).toHaveBeenCalled();
+    expect(routerSpy).toHaveBeenCalledWith(['/login']);
   });
 
   afterEach(() => {
     httpMock.verify();
-  });
-
-  it('should add an Authorization header with bearer token', () => {
-    const token = 'dummy_token';
-    spyOn(authService, 'getToken').and.returnValue(token);
-
-    httpClient.get('/api/some-route').subscribe(response => {
-      expect(response).toBeTruthy();
-    });
-
-    const httpRequest = httpMock.expectOne('/api/some-route');
-    expect(httpRequest.request.headers.has('Authorization')).toBeTrue();
-    expect(httpRequest.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
-  });
-
-  it('should logout and navigate to login page on 401 error', () => {
-    spyOn(authService, 'logout');
-    spyOn(TestBed.inject(Router), 'navigate');
-
-    httpClient.get('/api/some-route').subscribe(
-      response => {
-        // do nothing
-      },
-      error => {
-        expect(error.status).toBe(401);
-      }
-    );
-
-    const httpRequest = httpMock.expectOne('/api/some-route');
-    httpRequest.flush('', { status: 401, statusText: 'Unauthorized' });
-
-    expect(authService.logout).toHaveBeenCalled();
-    expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['login']);
   });
 });

@@ -52,7 +52,10 @@ export class UserLoginComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmNewPassword: ['', Validators.required]
     });
-
+    this.form = new FormGroup({
+      userName: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required)
+    });
   }
 
  // Add a method for resetting the password
@@ -89,31 +92,30 @@ onSubmit() {
       this.resetPassword(); // Call the correct method for password reset
     } else {
       // It's a login request
-      const loginRequest: LoginRequest = {
+      var loginRequest = <LoginRequest>{
         userName: this.form.controls['userName'].value,
-        password: this.form.controls['password'].value,
-        token: ''
+        password: this.form.controls['password'].value
       };
 
       console.log('Login button clicked'); // Add this line to log the event
 
-      this.authService.login(loginRequest).subscribe(
-        result => {
+      this.authService.login(loginRequest).subscribe({
+        next: result => {
           console.log(result);
           this.loginResult = result;
           if (result.success) {
             localStorage.setItem(this.authService.tokenKey, result.token);
+            this.router.navigate(["/"]);
             this.alertify.success('You are successfully logged in');
-            this.router.navigate(['/']); // Redirect to home page
           }
         },
-        error => {
+        error: error => {
           console.log(error);
           if (error.status == 401) {
+            loginRequest = error.error;
             this.alertify.error('Invalid username or password');
           }
-        }
-      );
+      }});
     }
   }
 }

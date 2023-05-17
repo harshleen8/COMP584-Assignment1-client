@@ -50,9 +50,8 @@ export class AddPropertyComponent implements OnInit {
     PType: '',
     FType: '',
     BHK: 0,
-    BuiltArea: 0,
     City: '',
-    RTM: 0
+    Address: ''
   };
   http: any;
   country: any;
@@ -69,8 +68,8 @@ export class AddPropertyComponent implements OnInit {
       {
         name: new FormControl(''),
         SellRent: new FormControl(''),
-        PropertyTypeId: new FormControl(''),
-        FurnishingTypeId: new FormControl(''),
+        PType: new FormControl(''),
+        FType: new FormControl(''),
         Price: new FormControl(''),
         BHK: new FormControl(''),
       }
@@ -100,41 +99,37 @@ export class AddPropertyComponent implements OnInit {
         BHK: [null, Validators.required],
         PType: [null, Validators.required],
         FType: [null, Validators.required],
-        Name: [null, Validators.required],
         City: [null, Validators.required]
       }),
 
       PriceInfo: this.fb.group({
-        Price: [null, Validators.required],
-        BuiltArea: [null, Validators.required],
-        CarpetArea: [null],
-        Security: [null],
-        Maintenance: [null],
+        Price: [null, Validators.required]
       }),
 
       AddressInfo: this.fb.group({
-        FloorNo: [null],
-        TotalFloor: [null],
-        Address: [null, Validators.required],
-        LandMark: [null],
+        Address: [null, Validators.required]
       }),
-
-      OtherInfo: this.fb.group({
-        RTM: [null, Validators.required],
-        PossessionOn: [null],
-        AOP: [null],
-        Gated: [null],
-        MainEntrance: [null],
-        Description: [null]
-      })
       });
   }
-  saveData(){
-    let property = this.property!;
+  saveData() {
+    let property = new Property();
 
     property.Name = this.form.controls['name'].value;
+    // set other properties of the property object
 
+    // perform further actions with the property object
+
+    this.housingService.addProperty(property).subscribe(
+      () => {
+        this.alertify.success('Congrats, your property has been saved successfully');
+        // Handle any additional actions after saving the property
+      }
+    );
   }
+
+
+
+
 
 //#region <Getter Methods>
   // #region <FormGroups>
@@ -148,10 +143,6 @@ export class AddPropertyComponent implements OnInit {
 
       get AddressInfo() {
         return this.addPropertyForm.controls['AddressInfo'] as FormGroup;
-      }
-
-      get OtherInfo() {
-        return this.addPropertyForm.controls['OtherInfo'] as FormGroup;
       }
   // #endregion
 
@@ -196,41 +187,53 @@ export class AddPropertyComponent implements OnInit {
   onBack() {
     this.router.navigate(['/']);
   }
+  // Inside AddPropertyComponent class
 
-  async onSubmit() {
+onFileChange(event: any) {
+  const files = event.target.files;
+  // Perform necessary logic with the selected files
+}
+
+
+  onSubmit() {
     this.nextClicked = true;
     if (this.allTabsValid()) {
       this.mapProperty();
 
-      try {
-        await this.housingService.addProperty(this.property1);
-        this.alertify.success('Congrats, your property listed successfully on our website');
+      this.housingService.addProperty(this.property1).subscribe(
+        () => {
+            this.alertify.success('Congrats, your property listed successfully on our website');
+            console.log(this.addPropertyForm);
 
-        if (this.SellRent.value === '2') {
-          this.router.navigate(['/rent-property']);
-        } else {
-          this.router.navigate(['/']);
+            if (this.SellRent.value === '2') {
+                this.router.navigate(['/rent-property']);
+            } else {
+                this.router.navigate(['/']);
+            }
         }
-      } catch (error) {
-        this.alertify.error('An error occurred while adding the property. Please try again later.');
-      }
+    );
     } else {
       this.alertify.error('Please review the form and provide all valid entries');
     }
   }
 
-
   mapProperty(): void {
-    this.property1.Id = this.housingService.newPropID();
-    this.property1.SellRent = +this.SellRent.value;
-    this.property1.BHK = this.BHK.value;
-    this.property1.PType = this.PType.value;
-    this.property1.Name = this.Name.value;
-    this.property1.City = this.City.value;
-    this.property1.FType = this.FType.value;
-    this.property1.Price = this.Price.value;
-    this.property1.Address = this.Address.value;
+    if (this.addPropertyForm.valid) {
+      this.property1.Id = this.housingService.newPropID();
+      this.property1.SellRent = +this.addPropertyForm.get('BasicInfo.SellRent')?.value;
+      this.property1.BHK = this.addPropertyForm.get('BasicInfo.BHK')?.value;
+      this.property1.PType = this.addPropertyForm.get('BasicInfo.PType')?.value;
+      this.property1.Name = this.addPropertyForm.get('BasicInfo.Name')?.value;
+      this.property1.City = this.addPropertyForm.get('BasicInfo.City')?.value;
+      this.property1.FType = this.addPropertyForm.get('BasicInfo.FType')?.value;
+      this.property1.Price = this.addPropertyForm.get('PriceInfo.Price')?.value;
+      this.property1.Address = this.addPropertyForm.get('AddressInfo.Address')?.value;
+    }
   }
+
+
+
+
 
   allTabsValid(): boolean {
     if (this.BasicInfo.invalid) {
@@ -245,11 +248,6 @@ export class AddPropertyComponent implements OnInit {
 
     if (this.AddressInfo.invalid) {
       this.formTabs.tabs[2].active = true;
-      return false;
-    }
-
-    if (this.OtherInfo.invalid) {
-      this.formTabs.tabs[3].active = true;
       return false;
     }
     return true;

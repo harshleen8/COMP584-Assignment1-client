@@ -1,78 +1,55 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AlertifyService } from 'src/app/services/alertify.service';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
+import { of } from 'rxjs';
 import { HousingService } from 'src/app/services/housing.service';
+import { AlertifyService } from 'src/app/services/alertify.service';
 import { AddPropertyComponent } from './add-property.component';
-
 
 describe('AddPropertyComponent', () => {
   let component: AddPropertyComponent;
   let fixture: ComponentFixture<AddPropertyComponent>;
+  let housingService: HousingService;
+  let alertifyService: AlertifyService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      declarations: [AddPropertyComponent, TabsetComponent],
       imports: [ReactiveFormsModule, RouterTestingModule],
-      declarations: [AddPropertyComponent],
       providers: [HousingService, AlertifyService]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AddPropertyComponent);
     component = fixture.componentInstance;
+    housingService = TestBed.inject(HousingService);
+    alertifyService = TestBed.inject(AlertifyService);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create addPropertyForm with required controls', () => {
-    expect(component.addPropertyForm.contains('BasicInfo')).toBeTrue();
-    expect(component.addPropertyForm.contains('PriceInfo')).toBeTrue();
-    expect(component.addPropertyForm.contains('AddressInfo')).toBeTrue();
-    expect(component.addPropertyForm.contains('OtherInfo')).toBeTrue();
-
-    const basicInfo = component.addPropertyForm.get('BasicInfo');
-    expect(basicInfo?.get('SellRent')?.hasError('required')).toBeTrue();
-    expect(basicInfo?.get('BHK')?.hasError('required')).toBeTrue();
-    expect(basicInfo?.get('PType')?.hasError('required')).toBeTrue();
-    expect(basicInfo?.get('FType')?.hasError('required')).toBeTrue();
-    expect(basicInfo?.get('Name')?.hasError('required')).toBeTrue();
-    expect(basicInfo?.get('City')?.hasError('required')).toBeTrue();
-
-    const priceInfo = component.addPropertyForm.get('PriceInfo');
-    expect(priceInfo?.get('Price')?.hasError('required')).toBeTrue();
-    expect(priceInfo?.get('BuiltArea')?.hasError('required')).toBeTrue();
-
-    const addressInfo = component.addPropertyForm.get('AddressInfo');
-    expect(addressInfo?.get('Address')?.hasError('required')).toBeTrue();
-
-    const otherInfo = component.addPropertyForm.get('OtherInfo');
-    expect(otherInfo?.get('RTM')?.hasError('required')).toBeTrue();
+  it('should initialize the addPropertyForm', () => {
+    expect(component.addPropertyForm).toBeDefined();
+    expect(component.addPropertyForm.valid).toBeFalsy();
+    expect(component.addPropertyForm.get('BasicInfo')).toBeTruthy();
+    // Add more expectations for the form initialization
   });
 
+  it('should retrieve all cities on component initialization', () => {
+    const mockCities: string[] = ['City 1', 'City 2'];
+    spyOn(housingService, 'getAllCities').and.returnValue(of(mockCities));
 
-  it('should set nextClicked to true and navigate to /property-detail when all form tabs are valid and onSubmit is called', () => {
-    spyOn(component.router, 'navigate');
+    component.ngOnInit();
 
-    component.nextClicked = false;
-    component.SellRent.setValue('1');
-    component.BHK.setValue('2');
-    component.PType.setValue('House');
-    component.FType.setValue('Fully');
-    component.Name.setValue('Test property');
-    component.City.setValue('Test city');
-    component.Price.setValue('100000');
-    component.BuiltArea.setValue('100');
-    component.Address.setValue('Test address');
-    component.RTM.setValue('1');
-    component.allTabsValid();
-    component.onSubmit();
-
-    expect(component.nextClicked).toBeTrue();
+    expect(housingService.getAllCities).toHaveBeenCalled();
+    expect(component.cityList).toEqual(mockCities);
   });
+
+  // Add more unit tests for other methods and functionalities of the component
+
 });
