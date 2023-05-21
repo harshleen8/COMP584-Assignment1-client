@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { IProperty } from '../model/iproperty';
 import { Property } from '../model/property';
-import { environment } from '../environment/environment';
+import { environment } from '../environment/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -22,52 +21,19 @@ export class HousingService {
   getProperty(id: number): Observable<Property | undefined> {
     return this.getAllProperties().pipe(
       map(propertiesArray => {
-        return propertiesArray.find(p => p.Id === id);
+        return propertiesArray.find(p => p.id === id);
       })
     );
   }
 
   getAllProperties(SellRent?: number): Observable<Property[]> {
-    return this.http.get<Property[]>('data/properties.json').pipe(
-      map(data => {
-        const propertiesArray: Array<Property> = [];
-        const localProperties = JSON.parse(localStorage.getItem('newProp') || 'null');
-
-        if (localProperties) {
-          for (const id in localProperties) {
-            if (localProperties.hasOwnProperty(id)) {
-              if (SellRent) {
-                if (localProperties[id].SellRent === SellRent) {
-                  propertiesArray.push(localProperties[id]);
-                }
-              } else {
-                propertiesArray.push(localProperties[id]);
-              }
-            }
-          }
-        }
-
-        for (const id in data) {
-          if (data.hasOwnProperty(id)) {
-            if (SellRent) {
-              if (data[id].SellRent === SellRent) {
-                propertiesArray.push(data[id]);
-              }
-            } else {
-              propertiesArray.push(data[id]);
-            }
-          }
-        }
-
-        return propertiesArray;
-      })
-    );
+    return this.http.get<Property[]>(this.baseUrl + '/getProperties');
   }
 
   addProperty(property: Property): Observable<any> {
 
     return this.http.post(this.baseUrl + '/api/property/add', property);
-}
+  }
 
   newPropID() {
     const pid = localStorage.getItem('PID');

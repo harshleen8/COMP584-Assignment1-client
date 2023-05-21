@@ -13,10 +13,10 @@ export class PropertyListComponent implements OnInit {
   SellRent = 1;
   properties: Property[] = [];
   Today = new Date();
-  City = '';
   SearchCity = '';
   SortbyParam = '';
   SortDirection = 'asc';
+  City!: '';
 
   constructor(private route: ActivatedRoute, private housingService: HousingService){ }
 
@@ -47,7 +47,7 @@ export class PropertyListComponent implements OnInit {
     //);
   }
   onCityFilter() {
-    this.SearchCity = this.City;
+    this.SearchCity = this.City[0];
   }
 
   onCityFilterClear() {

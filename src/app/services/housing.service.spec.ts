@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HousingService } from './housing.service';
-import { environment } from '../environment/environment';
+import { environment } from '../environment/environment.prod';
 import { Property } from '../model/property';
 
 describe('HousingService', () => {
@@ -37,16 +37,16 @@ describe('HousingService', () => {
 
   it('should retrieve a property by ID', () => {
     const mockProperties: Property[] = [
-      { Id: 1, Name: 'Property 1', SellRent: 0, PType: '', BHK: 0, FType: '', Price: 0, Address: '', City: '' },
-      { Id: 2, Name: 'Property 2', SellRent: 1, PType: '', BHK: 0, FType: '', Price: 0, Address: '', City: '' }
+      { id: 1, name: 'Property 1', sellRent: 0, PType: '', bhk: 0, FType: '', price: 0, address: '', City: '' },
+      { id: 2, name: 'Property 2', sellRent: 1, PType: '', bhk: 0, FType: '', price: 0, address: '', City: '' }
     ];
 
     const propertyId = 2;
 
     service.getProperty(propertyId).subscribe((property: Property | undefined) => {
       expect(property).toBeDefined();
-      expect(property?.Id).toBe(propertyId);
-      expect(property?.Name).toBe('Property 2');
+      expect(property?.id).toBe(propertyId);
+      expect(property?.name).toBe('Property 2');
     });
 
     const req = httpMock.expectOne('data/properties.json');
@@ -56,8 +56,8 @@ describe('HousingService', () => {
 
   it('should retrieve all properties', () => {
     const mockProperties: Property[] = [
-      { Id: 1, Name: 'Property 1', SellRent: 0, PType: '', BHK: 0, FType: '', Price: 0, Address: '', City: '' },
-      { Id: 2, Name: 'Property 2', SellRent: 1, PType: '', BHK: 0, FType: '', Price: 0, Address: '', City: '' }
+      { id: 1, name: 'Property 1', sellRent: 0, PType: '', bhk: 0, FType: '', price: 0, address: '', City: '' },
+      { id: 2, name: 'Property 2', sellRent: 1, PType: '', bhk: 0, FType: '', price: 0, address: '', City: '' }
     ];
 
 
@@ -73,13 +73,13 @@ describe('HousingService', () => {
 
   it('should add a property', () => {
     const mockProperty: Property = {
-      Id: 1, Name: 'New Property',
-      SellRent: 0,
+      id: 1, name: 'New Property',
+      sellRent: 0,
       PType: '',
-      BHK: 0,
+      bhk: 0,
       FType: '',
-      Price: 0,
-      Address: '',
+      price: 0,
+      address: '',
       City: ''
     };
 

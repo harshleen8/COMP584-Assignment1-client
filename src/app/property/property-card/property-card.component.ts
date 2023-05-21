@@ -13,5 +13,4 @@ export class PropertyCardComponent {
 
   @Input()
   hideIcons!: boolean;
-
 }

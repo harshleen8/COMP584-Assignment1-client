@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, tap } from 'rxjs';
-import { environment } from '../environment/environment';
+import { environment } from '../environment/environment.prod';
 import { LoginRequest } from './login-request';
 import { LoginResult } from './login-result';
 import { UserSignUp } from './user-signup/user-signup';
@@ -27,7 +27,7 @@ tokenKey: string = 'jwt-token';
     this._authStatus.next(isAuthenticated);
   }
 
-  constructor(protected http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   isAuthenticated() : boolean {
     return this.getToken() != null;

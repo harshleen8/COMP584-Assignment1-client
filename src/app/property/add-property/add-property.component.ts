@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, CanActivate, Router } from '@angular/router';
-import {FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { TabsetComponent } from 'ngx-bootstrap/tabs/public_api';
 import { IPropertyBase } from 'src/app/model/ipropertybase';
 import { Property } from 'src/app/model/property';
 import { HousingService } from 'src/app/services/housing.service';
 import { AlertifyService } from 'src/app/services/alertify.service';
-import { map } from 'rxjs';
-import { environment } from 'src/app/environment/environment';
 import { Properties } from './Property';
 
 class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   canActivate() {
     if (!localStorage.getItem('userName')) {
@@ -36,22 +34,20 @@ export class AddPropertyComponent implements OnInit {
   property!: Properties;
   form!: FormGroup;
   id!: number;
-
-  // Will come from masters
   propertyTypes: Array<string> = ['House', 'Apartment', 'Duplex']
   furnishTypes: Array<string> = ['Fully', 'Semi', 'Unfurnished']
   cityList!: any[];
 
   propertyView: IPropertyBase = {
-    Id: 0,
-    Name: '',
-    Price: 0,
-    SellRent: 0,
+    id: 0,
+    name: '',
+    price: 0,
+    sellRent: 0,
     PType: '',
     FType: '',
-    BHK: 0,
+    bhk: 0,
     City: '',
-    Address: ''
+    address: ''
   };
   http: any;
   country: any;
@@ -74,28 +70,16 @@ export class AddPropertyComponent implements OnInit {
         BHK: new FormControl(''),
       }
     );
-
-   // this.loadData();
-
-        this.CreateAddPropertyForm();
-        this.housingService.getAllCities().subscribe(data => {
-          this.cityList = data;
-          console.log(data);
-      });
+    this.CreateAddPropertyForm();
+    this.housingService.getAllCities().subscribe((data: any[]) => {
+      this.cityList = data;
+      console.log(data);
+    });
   }
-  // loadData(): void {
-  //   let idParam = this.activatedRoute.snapshot.paramMap.get('id');
-  //   let url = environment.baseUrl + `api/Properties/${idParam}`;
-  //   this.http.get<Properties>(url).subscribe((result: any) => {
-  //     this.property = result;
-  //     this.form.patchValue(this.property);
-  //   });
-  // }
-
   CreateAddPropertyForm() {
     this.addPropertyForm = this.fb.group({
       BasicInfo: this.fb.group({
-        SellRent: ['1' , Validators.required],
+        SellRent: ['1', Validators.required],
         BHK: [null, Validators.required],
         PType: [null, Validators.required],
         FType: [null, Validators.required],
@@ -110,75 +94,68 @@ export class AddPropertyComponent implements OnInit {
       AddressInfo: this.fb.group({
         Address: [null, Validators.required]
       }),
-      });
+    });
+  }
+  get BasicInfo() {
+    return this.addPropertyForm.controls['BasicInfo'] as FormGroup;
+  }
+
+  get PriceInfo() {
+    return this.addPropertyForm.controls['PriceInfo'] as FormGroup;
+  }
+
+  get AddressInfo() {
+    return this.addPropertyForm.controls['AddressInfo'] as FormGroup;
+  }
+  // #endregion
+
+  //#region <Form Controls>
+  get SellRent() {
+    return this.BasicInfo.controls['SellRent'] as FormControl;
+  }
+
+  get BHK() {
+    return this.BasicInfo.controls['BHK'] as FormControl;
+  }
+
+  get PType() {
+    return this.BasicInfo.controls['PType'] as FormControl;
+  }
+
+  get FType() {
+    return this.BasicInfo.controls['FType'] as FormControl;
+  }
+
+  get Name() {
+    return this.BasicInfo.controls['Name'] as FormControl;
+  }
+
+  get City() {
+    return this.BasicInfo.controls['City'] as FormControl;
+  }
+
+  get Price() {
+    return this.PriceInfo.controls['Price'] as FormControl;
+  }
+
+  get Address() {
+    return this.AddressInfo.controls['Address'] as FormControl;
   }
 
 
 
-
-
-//#region <Getter Methods>
-  // #region <FormGroups>
-      get BasicInfo() {
-        return this.addPropertyForm.controls['BasicInfo'] as FormGroup;
-      }
-
-      get PriceInfo() {
-        return this.addPropertyForm.controls['PriceInfo'] as FormGroup;
-      }
-
-      get AddressInfo() {
-        return this.addPropertyForm.controls['AddressInfo'] as FormGroup;
-      }
-  // #endregion
-
-  //#region <Form Controls>
-      get SellRent() {
-        return this.BasicInfo.controls['SellRent'] as FormControl;
-      }
-
-      get BHK() {
-        return this.BasicInfo.controls['BHK'] as FormControl;
-      }
-
-      get PType() {
-        return this.BasicInfo.controls['PType'] as FormControl;
-      }
-
-      get FType() {
-        return this.BasicInfo.controls['FType'] as FormControl;
-      }
-
-      get Name() {
-        return this.BasicInfo.controls['Name'] as FormControl;
-      }
-
-      get City() {
-        return this.BasicInfo.controls['City'] as FormControl;
-      }
-
-      get Price() {
-        return this.PriceInfo.controls['Price'] as FormControl;
-      }
-
-      get Address() {
-        return this.AddressInfo.controls['Address'] as FormControl;
-      }
-
-
-
   //#endregion
-//#endregion
+  //#endregion
 
   onBack() {
     this.router.navigate(['/']);
   }
   // Inside AddPropertyComponent class
 
-onFileChange(event: any) {
-  const files = event.target.files;
-  // Perform necessary logic with the selected files
-}
+  onFileChange(event: any) {
+    const files = event.target.files;
+    // Perform necessary logic with the selected files
+  }
 
 
   onSubmit() {
@@ -188,10 +165,10 @@ onFileChange(event: any) {
 
       try {
         this.housingService.addProperty(this.property1).subscribe({
-          next: (data)=> {
+          next: (data: any) => {
             console.log(data);
           },
-          error: (error)=> {
+          error: (error: any) => {
             console.log(error);
           }
         });
@@ -214,22 +191,17 @@ onFileChange(event: any) {
 
   mapProperty(): void {
     if (this.addPropertyForm.valid) {
-      this.property1.Id = this.housingService.newPropID();
-      this.property1.SellRent = +this.addPropertyForm.get('BasicInfo.SellRent')?.value;
-      this.property1.BHK = this.addPropertyForm.get('BasicInfo.BHK')?.value;
+      this.property1.id = this.housingService.newPropID();
+      this.property1.sellRent = +this.addPropertyForm.get('BasicInfo.SellRent')?.value;
+      this.property1.bhk = this.addPropertyForm.get('BasicInfo.BHK')?.value;
       this.property1.PType = this.addPropertyForm.get('BasicInfo.PType')?.value;
-      this.property1.Name = this.addPropertyForm.get('BasicInfo.Name')?.value;
+      this.property1.name = this.addPropertyForm.get('BasicInfo.Name')?.value;
       this.property1.City = this.addPropertyForm.get('BasicInfo.City')?.value;
       this.property1.FType = this.addPropertyForm.get('BasicInfo.FType')?.value;
-      this.property1.Price = this.addPropertyForm.get('PriceInfo.Price')?.value;
-      this.property1.Address = this.addPropertyForm.get('AddressInfo.Address')?.value;
+      this.property1.price = this.addPropertyForm.get('PriceInfo.Price')?.value;
+      this.property1.address = this.addPropertyForm.get('AddressInfo.Address')?.value;
     }
   }
-
-
-
-
-
   allTabsValid(): boolean {
     if (this.BasicInfo.invalid) {
       this.formTabs.tabs[0].active = true;

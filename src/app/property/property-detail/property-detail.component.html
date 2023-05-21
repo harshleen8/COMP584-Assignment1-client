@@ -6,9 +6,9 @@
         <img *ngIf="!mainPhotoUrl" class="card-img-top" src="assets/images/house_default.png">
       </div>
       <div class="card-body">
-        <h1 class="card-title">{{property.Name}}</h1>
+        <h1 class="card-title">{{property.name}}</h1>
         <div>
-          <strong>{{property.BHK}} BHK {{property.PType}} @ ${{property.Price}}</strong>
+          <strong>{{property.bhk}} BHK {{property.PType}} @ ${{property.price}}</strong>
         </div>
         <div>
           <strong>in {{property.City}}</strong>
@@ -21,8 +21,8 @@
         </div>
         <div>
           <strong>Available for: </strong>
-          <span *ngIf="property.SellRent == 1">Purchase</span>
-          <span *ngIf="property.SellRent == 2">Rent</span>
+          <span *ngIf="property.sellRent == 1">Purchase</span>
+          <span *ngIf="property.sellRent == 2">Rent</span>
         </div>
 
       </div>
@@ -38,14 +38,14 @@
             <div class="col-sm-6">
               <div class="heading">
                 <strong>Project Name</strong>
-                <p>{{property.Name}}</p>
+                <p>{{property.name}}</p>
               </div>
             </div>
             <tab heading="Address">
               <div class="col-sm-12">
                 <h1>Address</h1>
                 <div class="heading">
-                  <strong>{{property.Address}}</strong><br />
+                  <strong>{{property.address}}</strong><br />
                   <strong>{{property.City}}</strong>
                 </div>
               </div>

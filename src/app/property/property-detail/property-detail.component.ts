@@ -15,6 +15,7 @@ export class PropertyDetailComponent implements OnInit {
   mainPhotoUrl: any;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages!: NgxGalleryImage[];
+  cities: string[] = ['NewYork', 'Seattle', 'Chicago', 'Northridge'];
 
   constructor(
     private route: ActivatedRoute,
@@ -23,13 +24,13 @@ export class PropertyDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe((params: { [x: string]: string | number; }) => {
       this.propertyId = +params['id'];
       this.housingService.getProperty(this.propertyId).subscribe(
         (data: any) => {
           this.property = data;
         },
-        (error) => this.router.navigate(['/'])
+        (error: any) => this.router.navigate(['/'])
       );
     });
 
@@ -64,11 +65,7 @@ export class PropertyDetailComponent implements OnInit {
         medium: 'assets/images/internal-4.jpg',
         big: 'assets/images/internal-4.jpg'
       },
-      {
-        small: 'assets/images/internal-5.jpg',
-        medium: 'assets/images/internal-5.jpg',
-        big: 'assets/images/internal-5.jpg'
-      }
+
     ];
   }
 }
